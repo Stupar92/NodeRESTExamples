@@ -1,5 +1,9 @@
-﻿var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
+var mongoose = require('mongoose');
+/**
+ * bcrypt could not be installed on mac so bcrypt-nodejs is used. Only diff
+ * is that hash function takes 4 arguments intead of 3
+ */
+var bcrypt = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
 
 var emailSchema = new Schema({
@@ -30,7 +34,9 @@ userSchema.statics.hashPassword = function (passwordRaw, fn) {
     if (process.env.NODE_ENV === 'test') {
         BCRYPT_COST = 1;
     }
-    bcrypt.hash(passwordRaw, BCRYPT_COST, fn);
+    // With bcrypt whis would be:
+    // bcrypt.hash(passwordRaw, BCRYPT_COST, fn);
+    bcrypt.hash(passwordRaw, null, null, fn);
 }
 
 userSchema.statics.comparePasswordAndHash = function (password, passwordHash, fn) {

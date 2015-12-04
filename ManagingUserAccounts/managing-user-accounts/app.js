@@ -7,9 +7,11 @@ var bodyParser       = require('body-parser');
 var mongoose = require('mongoose');
 var validator = require('validator');
 var expressValidator = require('express-validator');
+var passport = require('passport');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var auth = require('./routes/auth');
 
 /**
  * We do var app = exports.app = express(); instead of var app = express()
@@ -45,7 +47,8 @@ app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
 
-
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
@@ -53,6 +56,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/auth', auth);
+//app.post('/auth/local', auth.local);
 
 app.get('/add/:first/:second', function (req, res) {
     // convert the two values to floats and add them together
