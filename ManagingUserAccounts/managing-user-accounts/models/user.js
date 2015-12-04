@@ -1,4 +1,5 @@
 ﻿var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
 
 var emailSchema = new Schema({
@@ -16,5 +17,23 @@ var userSchema = new Schema({
     },
     emails: [emailSchema]
 });
+
+//Constant, this is a salt
+var BCRYPT_COST = 12;
+
+userSchema.statics.hashPassword = function (passwordRaw, fn) {
+    /**
+     * Speed up the hashing if we are in test enviroment.
+     * BCRYPT_COST of 12 last approx. 300ms
+     */
+    if (process.env.NODE_ENV === 'test') {
+        BCRYPT_COST = 1;
+    }
+    bcrypt.hash(passwordRaw, BCRYPT_COST, fn);
+}
+
+userSchema.statics.comparePasswordAndHash = function (password, passwordHash, fn) {
+    bcrypt.compare(password, passwordHash, fn);
+}
 
 exports.User = mongoose.model('User', userSchema);

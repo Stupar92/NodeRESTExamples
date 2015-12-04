@@ -3,6 +3,7 @@ var should = require('should');
 
 var User = require('../../models/user').User;
 
+
 describe('models/user', function () {
     describe('Create', function () {
         it('create a new user', function (done) {
@@ -41,3 +42,54 @@ describe('models/user', function () {
         })
     })
 })
+
+describe('hash password', function () {
+    /**
+     * We define what slow means, so if the test lasts more that 1000ms it will be red,
+     * a little less will be yellow.
+     * We can also set a timeout to the test via `this.timeout(<num>)`.
+     */
+    this.slow(100);
+    it('returns hashed password asynchroniously', function (done) {
+        var password = 'secret';
+
+        User.hashPassword(password, function (err, passwordHash) {
+            should.not.exist(err);
+
+            should.exist(passwordHash);
+            done();
+        })
+    });
+});
+
+describe('compare password and hash', function () {
+    it('returns true if password is valid', function (done) {
+        var password = 'secret';
+        
+        // First create a password hash
+        User.hashPassword(password, function (err, passwordHash) {
+            should.not.exist(err);
+            
+            User.comparePasswordAndHash(password, passwordHash, function (err, areEqual) {
+                should.not.exist(err);
+                areEqual.should.equal(true);
+                done();
+            });
+        });
+    });
+
+    it('returns false if password is invalid', function () {
+        var password = 'secret';
+
+        User.hashPassword(password, function (err, passwordHash) {
+            should.not.exist(err);
+            
+            var fakePassword = 'jostup';
+            User.comparePasswordAndHash(fakePassword, passwordHash, function (err, areEqual) {
+                should.not.exist(err);
+                areEqual.should.equal(false);
+                done();
+            });
+        });
+    })
+});
