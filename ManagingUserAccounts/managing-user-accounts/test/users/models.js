@@ -78,7 +78,7 @@ describe('compare password and hash', function () {
         });
     });
 
-    it('returns false if password is invalid', function () {
+    it('returns false if password is invalid', function (done) {
         var password = 'secret';
 
         User.hashPassword(password, function (err, passwordHash) {

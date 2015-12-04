@@ -6,16 +6,27 @@ var mongoose = require('mongoose');
 
 process.env.NODE_ENV = 'test';
 
+/**
+ * Mongoose ready state:
+ * 0 - disconnected
+ * 1 - connected
+ * 2 - connecting
+ * 3 - disconnecting
+ * 
+ * get it with: `mongoose.connection.readyState`.
+ */
 beforeEach(function (done) {
     
     function clearDB() {
         for (var i in mongoose.connection.collections) {
             mongoose.connection.collections[i].remove();
         }
+        
         return done();
     }
     
     function reconnect() {
+
         mongoose.connect(config.db.test, function (err) {
             if (err) {
                 throw err;
@@ -44,6 +55,7 @@ beforeEach(function (done) {
                     checkState();
                 }, 500);
         }
+        
     }
     
     checkState();

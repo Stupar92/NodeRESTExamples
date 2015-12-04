@@ -15,7 +15,8 @@ var userSchema = new Schema({
         firstName: String,
         lastName: String
     },
-    emails: [emailSchema]
+    emails: [emailSchema],
+    passwordHash: String
 });
 
 //Constant, this is a salt

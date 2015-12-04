@@ -43,6 +43,9 @@
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
     </Compile>
+    <Compile Include="test\users\routes.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
     <Compile Include="test\users\models.js">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
