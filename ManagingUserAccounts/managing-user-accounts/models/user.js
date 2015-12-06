@@ -20,7 +20,8 @@ var userSchema = new Schema({
         lastName: String
     },
     emails: [emailSchema],
-    passwordHash: String
+    passwordHash: String,
+    roles: Array
 });
 
 //Constant, this is a salt
@@ -41,6 +42,15 @@ userSchema.statics.hashPassword = function (passwordRaw, fn) {
 
 userSchema.statics.comparePasswordAndHash = function (password, passwordHash, fn) {
     bcrypt.compare(password, passwordHash, fn);
+}
+
+userSchema.methods.hasRole = function(role) {
+  for (var i = 0; i < this.roles.length; i++) {
+    if (this.roles[i] === role) {
+      return true;
+    }
+  }
+  return false;
 }
 
 exports.User = mongoose.model('User', userSchema);

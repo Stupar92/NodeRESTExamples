@@ -41,7 +41,34 @@ describe('models/user', function () {
             })
         })
     })
-})
+
+    describe(' has role', function() {
+      var user;
+
+      // beforeEach test create a user
+      beforeEach(function (done) {
+        var u = {
+        roles: ['admin', 'mod']
+        };
+        User.create(u, function (err, createdUser) {
+          user = createdUser;
+          done();
+        });
+      });
+
+      it('should return true if the user has role', function (done) {
+        user.hasRole('admin').should.be.true;
+        user.hasRole('mod').should.be.true;
+        done();
+      });
+
+      it('should return false if the user does not have role', function (done) {
+        user.hasRole('astronaut').should.be.false;
+        user.hasRole('cowboy').should.be.false;
+        done();
+      });
+    });
+});
 
 describe('hash password', function () {
     /**
@@ -65,11 +92,11 @@ describe('hash password', function () {
 describe('compare password and hash', function () {
     it('returns true if password is valid', function (done) {
         var password = 'secret';
-        
+
         // First create a password hash
         User.hashPassword(password, function (err, passwordHash) {
             should.not.exist(err);
-            
+
             User.comparePasswordAndHash(password, passwordHash, function (err, areEqual) {
                 should.not.exist(err);
                 areEqual.should.equal(true);
@@ -83,7 +110,7 @@ describe('compare password and hash', function () {
 
         User.hashPassword(password, function (err, passwordHash) {
             should.not.exist(err);
-            
+
             var fakePassword = 'jostup';
             User.comparePasswordAndHash(fakePassword, passwordHash, function (err, areEqual) {
                 should.not.exist(err);

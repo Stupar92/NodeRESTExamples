@@ -12,6 +12,7 @@ var passport = require('passport');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var auth = require('./routes/auth');
+var admin = require('./routes/admin');
 
 /**
  * We do var app = exports.app = express(); instead of var app = express()
@@ -35,7 +36,11 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+
+/**
+ * Morgan is routing logger, it will log all routes
+ */
+//app.use(logger('dev'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -57,7 +62,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/auth', auth);
-//app.post('/auth/local', auth.local);
+app.use('/admin', admin);
 
 app.get('/add/:first/:second', function (req, res) {
     // convert the two values to floats and add them together
